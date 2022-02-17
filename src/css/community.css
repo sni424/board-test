@@ -1,0 +1,22 @@
+.community{
+    width: 150px;
+    background-color: #004c92;
+    color: white;
+    font-weight: 200;
+    height: 1000px;
+}
+.community h3{
+    text-align: center;
+    font-size: 30px;
+}
+.subtitle-nav{
+    text-align: start;
+    margin-left: -20px;
+    margin-top: -15px;
+}
+.subtitle-nav li{
+    list-style: none;
+    font-size: 13px;
+    color: #9fb0c9;
+    padding: 6px 0;
+}

@@ -1,0 +1,87 @@
+*{
+    box-sizing: border-box;
+  }
+.flex{
+    display: flex;
+    justify-content: flex-start;
+}
+.main{
+    display: flex;
+
+}
+.start{
+    margin-top: -30px;
+}
+.leftbar-ca{
+    width: 60px;
+    }
+.leftbar{
+    display: block;
+    background-color: #0059ab;
+    overflow: hidden;
+    padding: 0 20px;
+    height: 937px;
+    }
+.logo img{
+    vertical-align: middle;
+    margin-left: -13px;
+    margin-top: 10px;
+    width: 48px;
+    }
+.search{
+    margin-top: 35px;
+    }
+.search a{
+    color: #fff;
+    font-size: 14px;
+    }
+.second-icon{
+    margin-top: 35px;
+    }
+.login-icon a{
+    color: #fff;
+    font-size: 12px;
+    }
+.signin-icon{
+      margin-top: 20px;
+    }
+.signin-icon a{
+    color: #fff;
+    font-size: 12px;
+    }
+.ulfirst-tag{
+    margin-top: 100px;
+    }
+.ulfirst-tag li{
+    list-style: none;
+    margin-left: -43px;
+    color: #fff;
+    width: 10px;
+    padding: 0 12px;
+    border: solid 1px white;
+    border-radius: 70%;
+    margin-top: 30px;
+    }
+li i{
+    margin-left: -5px;
+    margin-bottom: 5px;
+    font-size: 12px;
+    }
+.fa-code{
+    margin-left: -7px;
+    }
+.fa-comments{
+    margin-left: -7px;
+    }
+.fa-quote-left{
+    margin-left: -6px;
+    }
+.fa-group{
+    margin-left: -7px;
+    }
+.github-logo{
+    margin-top: 100px;
+    }
+.github-logo a{
+    color: #fff;
+    }
