@@ -2,18 +2,33 @@
   "boards": [
     {
       "id": 46546,
-      "title": "564566",
-      "contents": "54546"
-    },
-    {
-      "id": 55646,
-      "title": "fdsa",
-      "contents": "fdsa"
+      "title": "ㅎㄹㅇㅎㄴ",
+      "contents": "ㅎㄹㅇㄴ"
     },
     {
       "id": 846565,
-      "title": "gfdsg",
-      "contents": "gfdsgf"
+      "title": "5564564",
+      "contents": "56456"
+    }
+  ],
+  "boardsreply": [
+    {
+      "sameId": 846565,
+      "comment": "ㄹㅇㄴㄹㅇㄴ",
+      "like": 0,
+      "id": 46551
+    },
+    {
+      "sameId": 846565,
+      "comment": "fdsfdsf",
+      "like": 0,
+      "id": 46553
+    },
+    {
+      "sameId": 846565,
+      "comment": "6787",
+      "like": 0,
+      "id": 46554
     }
   ]
 }
