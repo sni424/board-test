@@ -6,7 +6,7 @@ function Update() {
     const data = useFetch("http://localhost:3001/boards");
     let navi = useNavigate();
     let { setid } = useParams();
-    // const hello = data.length > 0 && data.find(a => a.id === parseInt(setid)).title
+
     const [newTitle, setNewTitle] = useState("");
     const [newcontent, setNewContent] = useState("");
 
