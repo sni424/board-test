@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import Creply from "../reply/Creply";
+import ReplyShow from "../reply/ReplyShow";
 
 function Read() {
     const data = useFetch("http://localhost:3001/boards");
@@ -10,8 +11,9 @@ function Read() {
     let { setid } = useParams();
     let [put, setPut] = useState(`/putndelete/${setid}`);
     const navi = useNavigate();
-    const [checkUseEffect,setCheckUseEffect] = useState(true);
-    
+    const [checkUseEffect, setCheckUseEffect] = useState(true);
+
+
     function removeText() {
         if (data.length > 0) {
             if (window.confirm("삭제 하시겠습니까?")) {
@@ -29,8 +31,8 @@ function Read() {
     }
 
     useEffect(() => {
-            console.log("hello");      
-    }, [data.title, data.content,checkUseEffect])
+        console.log("hello");
+    }, [data.title, data.content, checkUseEffect])
 
 
     return (
@@ -52,79 +54,12 @@ function Read() {
             <Creply setid={setid}></Creply>
             {nReply.length > 0 &&
                 nReply.map((a, i) => {
-                    return <ReplyShow navi={navi} nReply={nReply} setCheckUseEffect={setCheckUseEffect} checkUseEffect={checkUseEffect} setid={setid} key={i} index={i} sameId={a.sameId} comment={a.comment} newid={a.id} like={a.like}></ReplyShow>
+                    return <ReplyShow nReply={nReply} setCheckUseEffect={setCheckUseEffect} checkUseEffect={checkUseEffect} setid={setid} key={i} index={i} sameId={a.sameId} comment={a.comment} newid={a.id} like={a.like}></ReplyShow>
                 })
             }
         </div>
     );
 };
-
-function ReplyShow({navi,setCheckUseEffect,checkUseEffect,nReply, setid, sameId, newid, comment, index, like }) {
-    const [changeReply, setChangeReply] = useState(true);
-    const putReply = useRef(null);
-    const [inputvalue, setinputvalue] = useState("");
-    const [newHello,setNewhello] = useState(comment);
-
-    function removeReply() {
-        if (nReply.length > 0) {
-            if (window.confirm("삭제 하시겠습니까?")) {
-                fetch(`http://localhost:3001/boardsreply/${nReply[index].id}`,
-                    {
-                        method: 'DELETE',
-                    }).then(res => {
-                        if (res.ok) {
-                            navi(`/`);
-                        }
-                    })
-            }
-        }
-    }
-    function valueChange(e){
-        const replyValue = e.target.value;
-        setinputvalue(replyValue);
-    }
-
-    function changetrue() {
-        setChangeReply(!changeReply);
-    };
-
-    function changeComment(event) {
-        const {target} = event.target
-        fetch(`http://localhost:3001/boardsreply/${nReply[index].id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                sameId: parseInt(setid),
-                comment: inputvalue,
-                like: 0,
-            }),
-        }).then(res => {
-            if (res.ok) {
-                setNewhello(inputvalue);
-                setChangeReply(!changeReply);
-                setCheckUseEffect(!checkUseEffect);
-                alert("댓글 수정완료.");    
-            }
-        })
-    }
-
-    return (
-        <div>
-            {sameId === parseInt(setid) &&
-                <div>{newHello}<button value={newid} onClick={removeReply}>❌</button><button onClick={changetrue}>수정</button>{
-                    changeReply === true
-                        ? null
-                        : <>
-                        <input value={inputvalue} type="text" placeholder="댓글수정" onChange={valueChange}/><button onClick={changeComment}>수정완료</button>
-                    </>
-                }</div>
-            }
-        </div>
-    );
-};
-
 
 export default Read;
 
