@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import useFetch from "../hooks/useFetch";
 
-function Creply({ setid,nReply }) {
+function Creply({ setid, nReply }) {
 
     const [nContents, setnContents] = useState("");
 
