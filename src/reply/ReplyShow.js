@@ -1,21 +1,21 @@
 import React, { useState, useRef } from "react";
 
-function ReplyShow({ setCheckUseEffect, checkUseEffect, nReply, setid, sameId, newid, comment, index }) {
+function ReplyShow({ setCheckUseEffect, checkUseEffect, setNewReply, newReply, setid, sameId, newid, index, comment }) {
     const [changeReply, setChangeReply] = useState(true);
     const putReply = useRef(null);
     const [inputvalue, setinputvalue] = useState("");
-    const [newComment, setNewComment] = useState(comment);
 
     function removeReply(e) {
         const { value } = e.target
-        if (nReply.length > 0) {
+        console.log(typeof value);
+        if (newReply.length > 0) {
             if (window.confirm("삭제 하시겠습니까?")) {
-                fetch(`http://localhost:3001/boardsreply/${nReply[index].id}`,
+                fetch(`http://localhost:3001/boardsreply/${newReply[index].id}`,
                     {
                         method: 'DELETE',
                     }).then(res => {
                         if (res.ok) {
-                            setNewComment(nReply.filter(a => a.id !== value).comment);
+                            setNewReply(newReply.filter(a => a.id !== parseInt(value)));
                         }
                     })
             }
@@ -30,9 +30,8 @@ function ReplyShow({ setCheckUseEffect, checkUseEffect, nReply, setid, sameId, n
         setChangeReply(!changeReply);
     };
 
-    function changeComment(event) {
-        const { target } = event.target
-        fetch(`http://localhost:3001/boardsreply/${nReply[index].id}`, {
+    function changeComment() {
+        fetch(`http://localhost:3001/boardsreply/${newReply[index].id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -44,7 +43,6 @@ function ReplyShow({ setCheckUseEffect, checkUseEffect, nReply, setid, sameId, n
             }),
         }).then(res => {
             if (res.ok) {
-                setNewComment(inputvalue);
                 setChangeReply(!changeReply);
                 setCheckUseEffect(!checkUseEffect);
                 alert("댓글 수정완료.");
@@ -55,8 +53,8 @@ function ReplyShow({ setCheckUseEffect, checkUseEffect, nReply, setid, sameId, n
     return (
         <div>
             {sameId === parseInt(setid) &&
-                <div>{newComment}
-                    {newComment &&
+                <div>{comment}
+                    {comment &&
                         <>
                             <button value={newid} onClick={removeReply}>❌</button><button onClick={changetrue}>수정</button>
                         </>

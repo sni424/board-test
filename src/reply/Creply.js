@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import useFetch from "../hooks/useFetch";
 
-function Creply({ setid, nReply }) {
+function Creply({ setid, setNewReply, newReply, setCheckUseEffect, checkUseEffect }) {
 
-    const [nContents, setnContents] = useState("");
+    const [newConmment, setNewConmment] = useState("");
 
     function onChange(e) {
         const { value } = e.target;
-        setnContents(value);
+        setNewConmment(value);
     }
 
     function CreateReply(event) {
@@ -20,12 +20,15 @@ function Creply({ setid, nReply }) {
                 },
                 body: JSON.stringify({
                     sameId: parseInt(setid),
-                    comment: nContents,
+                    comment: newConmment,
                     like: 0
                 }),
             }).then(res => {
                 if (res.ok) {
-                    setnContents("");
+                    setNewReply([...newReply, res]);
+                    setCheckUseEffect(!checkUseEffect);
+                    setNewConmment("");
+                    console.log()
                     alert("생성이 완료되었습니다.");
                 }
             })
@@ -33,7 +36,7 @@ function Creply({ setid, nReply }) {
     return (
         <div>
             <form onSubmit={CreateReply}>
-                <input type="text" placeholder="댓글" value={nContents} onChange={onChange}></input>
+                <input type="text" placeholder="댓글" value={newConmment} onChange={onChange}></input>
                 <button >입력</button>
             </form>
         </div>
