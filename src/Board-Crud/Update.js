@@ -1,14 +1,82 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useFetch from "../hooks/useFetch";
+import styled from "styled-components";
 
-function Update() {
-    const data = useFetch("http://localhost:3001/boards");
+const BackDiv = styled.div`
+background-color:#EFEFEF;
+width:100%;
+height:1000px;
+position:relative;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 300px;
+`;
+
+const HeaderDiv = styled.div`
+width:60%;
+height:80%;
+background:#ffffff;
+position:absolute;
+margin-top:50px;
+padding: 50px;
+`;
+
+const TextAreaFirst = styled.textarea`
+border: none;
+resize: none;
+outline:none;
+width:100%;
+height: ${props => props.height};
+&::placeholder{
+    font-size:28px;
+    font-weight:700;
+    color:gery;
+}
+`;
+const DivButton = styled.button`
+background-color:transparent;
+border:none;
+`;
+const ButtonA = styled.a`
+background-color:#FFFFFF;
+color:#3d3d3d;
+display:flex;
+width:100%;
+border:2px solid #717171;
+border-radius:5px;
+align-items: center;
+justify-content: center;
+font-size:16px;
+margin: 0 0 5px -7px;
+padding : 5px;
+`;
+const ButtonB = styled.a`
+background-color:#3b49df;
+color:#f9f9f9;
+display:flex;
+width:83px;
+height:40px;
+border-radius:5px;
+align-items: center;
+justify-content: center;
+font-size:16px;
+margin: 0 0 0 -7px;
+`;
+
+const ButtonDiv = styled.div`
+display:fles;
+align-items: center;
+justify-content: center;
+`;
+
+function Update({ newDatas, setNewDatas, fetchData }) {
+    console.log(newDatas);
     let navi = useNavigate();
     let { setid } = useParams();
 
-    const [newTitle, setNewTitle] = useState("");
-    const [newcontent, setNewContent] = useState("");
+    const [newTitle, setNewTitle] = useState(newDatas.find((a) => { return a.id === parseInt(setid) }).title);
+    const [newcontent, setNewContent] = useState(newDatas.find((a) => { return a.id === parseInt(setid) }).contents);
 
     function onChange(e) {
         const { value } = e.target;
@@ -39,26 +107,38 @@ function Update() {
             }
         })
     }
+    function returnPage() {
+        navi(-1);
+    }
+
+
+    useEffect(() => {
+        fetchData();
+    }, [])
 
     return (
-        <div className="panel-body">
-            <h1>Movie Review</h1>
-            <h3>제목</h3>
-            <div className='form-wrapper'>
-                <input className="title-input" type='text' placeholder='제목'
-                    value={newTitle} onChange={onChange} />
-                <h3>내용</h3>
-                <textarea
+        <BackDiv>
+            <HeaderDiv>
+                <DivButton><ButtonA href="#">Add a cover image</ButtonA></DivButton>
+                <TextAreaFirst
+                    height="auto"
+                    type='text'
+                    placeholder='제목'
+                    value={newTitle}
+                    onChange={onChange} />
+                <hr></hr>
+                <TextAreaFirst
+                    height="80%"
                     className="text-area"
                     placeholder='내용'
                     value={newcontent}
-                    onChange={onChange2}></textarea>
-            </div>
-            <div className="flex">
-                <button className="cancel-button" >취소</button>
-                <button className="submit-button" type="submit" onClick={addTitle}>등록</button>
-            </div>
-        </div>
+                    onChange={onChange2} />
+                <ButtonDiv>
+                    <DivButton><ButtonB href="#" onClick={addTitle}>Publish</ButtonB></DivButton>
+                    <DivButton><ButtonB href="#" onClick={returnPage}>Cancel</ButtonB></DivButton>
+                </ButtonDiv>
+            </HeaderDiv>
+        </BackDiv>
     );
 };
 
