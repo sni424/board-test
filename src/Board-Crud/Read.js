@@ -2,18 +2,127 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import useFetch from "../hooks/useFetch";
 import Creply from "../reply/Creply";
+import ReplyShow from "../reply/ReplyShow";
+import styled from "styled-components";
+import Profile from "../img/profile.png"
 
-function Read() {
-    const data = useFetch("http://localhost:3001/boards");
-    const nReply = useFetch("http://localhost:3001/boardsreply");
+const BackDiv = styled.div`
+background-color:#EFEFEF;
+width:100%;
+height:1000px;
+position:relative;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 300px;
 
+`;
+const HeaderDiv = styled.div`
+width:80%;
+height:100%;
+background:#ffffff;
+position:absolute;
+margin-top:50px;
+padding: 50px;
+`;
+const FirstDiv = styled.div`
+display: flex;
+align-items: center;
+justify-content: space-between;
+`;
+const SecondDiv = styled.div`
+display: flex;
+`
+const ProfileImg = styled.img`
+border-radius: 70%;
+width: 40px;
+height: 40px;
+`;
+const IdPost = styled.div`
+padding-left: 10px;
+`;
+const IdA = styled.a`
+color: #404040;
+font-size: 16px;
+font-weight: 700;
+&:hover {
+    color: blue;
+  }
+`;
+const PostPtag = styled.p`
+color: #717171;
+font-size: 12px;
+margin-top: 2px;
+font-weight: 500;
+`;
+
+const ThirdDiv = styled.div`
+display: flex;
+align-items: center;
+justify-content: space-between;
+background: #F59E0B1A;
+padding : 4px;
+border: 1px solid #F59E0B1A;
+border-radius:5px;
+`;
+const ThirdDivA = styled.a`
+color: #3d3d3d;
+font-size: 14px;
+padding: 4px 8px;
+&:hover {
+    background-color: white;
+    color: black;
+  }
+`;
+const HeaderH1 = styled.h1`
+color:#171717;
+font-weight: 600;
+margin-bottom: 8px;
+`;
+const LanguageTag = styled.div`
+display: flex;
+align-items: center;
+justify-content: start;
+`;
+const LanguageA = styled.a`
+padding: 4px 8px;
+font-size: 16px;
+&:hover {
+    background-color: ${props => props.background_color};
+    border-radius: 3px;
+    opacity: 0.7;
+  }
+`;
+const SharpSpan = styled.span`
+color:${props => props.color}
+`;
+const ContentP = styled.p`
+font-weight: 500;
+`;
+const DiscussionDiv = styled.div`
+color:#242424;
+font-size:24px;
+font-weight: 700;
+`;
+const Hr = styled.hr`
+width:100%;
+`;
+
+function Read({ newDatas, setNewDatas, fetchData }) {
+
+    const [newReply, setNewReply] = useState([]);
+    const fetchTasks = async () => {
+        const res = await fetch('http://localhost:3001/boardsreply')
+        const newData = await res.json()
+        return setNewReply(newData)
+    }
     let { setid } = useParams();
     let [put, setPut] = useState(`/putndelete/${setid}`);
     const navi = useNavigate();
-    const [checkUseEffect,setCheckUseEffect] = useState(true);
-    
+    const [checkUseEffect, setCheckUseEffect] = useState(true);
+
     function removeText() {
-        if (data.length > 0) {
+        if (newDatas.length > 0) {
             if (window.confirm("삭제 하시겠습니까?")) {
                 fetch(`http://localhost:3001/boards/${parseInt(setid)}`,
                     {
@@ -27,104 +136,68 @@ function Read() {
             }
         }
     }
+    function pre() {
+        navi(-1);
+    }
 
     useEffect(() => {
-            console.log("hello");      
-    }, [data.title, data.content,checkUseEffect])
+        fetchTasks(); fetchData();
+    }, [newDatas.title, newDatas.content, checkUseEffect])
 
 
     return (
-        <div>
-            <h2>제목</h2>
-            {data.length > 0 &&
-                <h3>{data.find(a => a.id === parseInt(setid)).title}</h3>}
-            <div className='form-wrapper'>
-                <h3>내용</h3>
-                <div>
-                    {data.length > 0 &&
-                        <h3>{data.find(x => x.id === parseInt(setid)).contents}</h3>}
-                </div>
-            </div>
-            <Link to={put}>
-                <button className="submit-button" type="submit">수정</button>
-            </Link>
-            <button className="submit-button" type="submit" onClick={removeText}>삭제</button><br></br>
-            <Creply setid={setid}></Creply>
-            {nReply.length > 0 &&
-                nReply.map((a, i) => {
-                    return <ReplyShow navi={navi} nReply={nReply} setCheckUseEffect={setCheckUseEffect} checkUseEffect={checkUseEffect} setid={setid} key={i} index={i} sameId={a.sameId} comment={a.comment} newid={a.id} like={a.like}></ReplyShow>
-                })
-            }
-        </div>
-    );
-};
-
-function ReplyShow({navi,setCheckUseEffect,checkUseEffect,nReply, setid, sameId, newid, comment, index, like }) {
-    const [changeReply, setChangeReply] = useState(true);
-    const putReply = useRef(null);
-    const [inputvalue, setinputvalue] = useState("");
-    const [newHello,setNewhello] = useState(comment);
-
-    function removeReply() {
-        if (nReply.length > 0) {
-            if (window.confirm("삭제 하시겠습니까?")) {
-                fetch(`http://localhost:3001/boardsreply/${nReply[index].id}`,
-                    {
-                        method: 'DELETE',
-                    }).then(res => {
-                        if (res.ok) {
-                            navi(`/`);
-                        }
+        <BackDiv>
+            <HeaderDiv>
+                <FirstDiv>
+                    <SecondDiv>
+                        <div><ProfileImg src={Profile}></ProfileImg></div>
+                        <IdPost>
+                            <IdA href="#">sni424</IdA>
+                            <PostPtag>Posted on 2월23일</PostPtag>
+                        </IdPost>
+                    </SecondDiv>
+                    <ThirdDiv>
+                        <Link to={put}>
+                            <ThirdDivA href="#">Edit</ThirdDivA>
+                        </Link>
+                        <ThirdDivA href="#" onClick={removeText}>Delete</ThirdDivA>
+                        <ThirdDivA href="#" onClick={pre}>Pre</ThirdDivA>
+                    </ThirdDiv>
+                </FirstDiv>
+                {newDatas.length > 0 &&
+                    <HeaderH1>{newDatas.find(a => a.id === parseInt(setid)).title}</HeaderH1>}
+                <LanguageTag>
+                    <LanguageA href="#" background_color={"rgba(0, 0, 0, 0.1)"}>
+                        <SharpSpan color="orange">#</SharpSpan>Java
+                    </LanguageA>
+                    <LanguageA href="#" background_color="green">
+                        <SharpSpan color="green">#</SharpSpan>JavaScript
+                    </LanguageA>
+                    <LanguageA href="#" background_color="blue">
+                        <SharpSpan color="blue">#</SharpSpan>Python
+                    </LanguageA>
+                </LanguageTag>
+                <>
+                    <ContentP>
+                        {newDatas.length > 0 &&
+                            <>{newDatas.find(x => x.id === parseInt(setid)).contents}</>}
+                    </ContentP>
+                </>
+                <Hr></Hr>
+                <DiscussionDiv>
+                    Discussion ({
+                        newReply.length})
+                </DiscussionDiv>
+                <Creply setCheckUseEffect={setCheckUseEffect} checkUseEffect={checkUseEffect} setid={setid} newReply={newReply} setNewReply={setNewReply}></Creply>
+                {newReply.length > 0 &&
+                    newReply.map((a, i) => {
+                        return <ReplyShow setNewReply={setNewReply} newReply={newReply} setCheckUseEffect={setCheckUseEffect} checkUseEffect={checkUseEffect} setid={setid} key={i} index={i} sameId={a.sameId} comment={a.comment} newid={a.id} like={a.like}></ReplyShow>
                     })
-            }
-        }
-    }
-    function valueChange(e){
-        const replyValue = e.target.value;
-        setinputvalue(replyValue);
-    }
-
-    function changetrue() {
-        setChangeReply(!changeReply);
-    };
-
-    function changeComment(event) {
-        const {target} = event.target
-        fetch(`http://localhost:3001/boardsreply/${nReply[index].id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                sameId: parseInt(setid),
-                comment: inputvalue,
-                like: 0,
-            }),
-        }).then(res => {
-            if (res.ok) {
-                setNewhello(inputvalue);
-                setChangeReply(!changeReply);
-                setCheckUseEffect(!checkUseEffect);
-                alert("댓글 수정완료.");    
-            }
-        })
-    }
-
-    return (
-        <div>
-            {sameId === parseInt(setid) &&
-                <div>{newHello}<button value={newid} onClick={removeReply}>❌</button><button onClick={changetrue}>수정</button>{
-                    changeReply === true
-                        ? null
-                        : <>
-                        <input value={inputvalue} type="text" placeholder="댓글수정" onChange={valueChange}/><button onClick={changeComment}>수정완료</button>
-                    </>
-                }</div>
-            }
-        </div>
+                }
+            </HeaderDiv>
+        </BackDiv>
     );
 };
-
 
 export default Read;
 
