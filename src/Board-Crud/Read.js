@@ -5,6 +5,7 @@ import Creply from "../reply/Creply";
 import ReplyShow from "../reply/ReplyShow";
 import styled from "styled-components";
 import Profile from "../img/profile.png"
+import lodash from "lodash"
 
 const BackDiv = styled.div`
 background-color:#EFEFEF;
