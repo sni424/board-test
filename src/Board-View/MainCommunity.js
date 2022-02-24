@@ -4,15 +4,21 @@ import { Link, } from "react-router-dom";
 import "../css/maincommunity.css"
 import useFetch from "../hooks/useFetch";
 import Second_logo from "../img/second-logo.png"
+import PageNum from "./PageNum";
 
-function MainCommunity() {
+function MainCommunity({ newDatas, fetchData }) {
 
-    const data = useFetch("http://localhost:3001/boards");
+    const [currentPage, setCurrentPage] = useState(1);//현재 페이지
+    const [postPage] = useState(10)//포스트 개수
+    const lastPost = currentPage * postPage //1*10 =10
+    const firstPast = lastPost - postPage  // 10-10 =0
+    const currentPosts = newDatas.slice(firstPast, lastPost);
 
-
+    console.log(currentPosts);
     useEffect(() => {
+        fetchData();
+    }, [newDatas.id, newDatas.contents, currentPage])
 
-    }, [data.title, data.content, data.id])
 
     return (
         <div className="full">
@@ -50,11 +56,14 @@ function MainCommunity() {
             <div className="lastdiv">
                 <ul className="last-ul">
                     {
-                        data.map((a, i) => {
-                            return <Newli Data={data} title={data[i].title} key={i} index={data[i].id}></Newli>
+                        currentPosts.map((a, i) => {
+                            return <Newli title={a.title} key={i} index={a.id}></Newli>
                         })
                     }
                 </ul>
+            </div>
+            <div>
+                <PageNum postPage={postPage} totalPost={newDatas.length} setCurrentPage={setCurrentPage}></PageNum>
             </div>
         </div>
     );
@@ -63,8 +72,6 @@ function MainCommunity() {
 function Newli({ title, index }) {
 
     let [newindex, setNewIndex] = useState(`/${index}`);
-
-    console.log(index);
 
     return (
         <>
