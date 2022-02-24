@@ -68,6 +68,7 @@ function ReplyShow({ setCheckUseEffect, checkUseEffect, setNewReply, newReply, s
                         method: 'DELETE',
                     }).then(res => {
                         if (res.ok) {
+                            setShowButton(!showButton);
                             setNewReply(newReply.filter(a => a.id !== parseInt(value)));
                         }
                     })
@@ -114,18 +115,18 @@ function ReplyShow({ setCheckUseEffect, checkUseEffect, setNewReply, newReply, s
         </div>
     return (
         <FirstDiv>
-            <ProfileImg src={Profile}></ProfileImg>
-            <SecondDiv>
-                <ThirdDiv>
-                    <NameDiv>
-                        <ATag href="#">sni424</ATag>
-                        <PTag>Feb 23</PTag>
-                    </NameDiv>
-                    <div>
-                        <NewButton><SpanTag href="#" onClick={ShowTwoButton}>...</SpanTag></NewButton>
-                    </div>
-                </ThirdDiv>
-                {sameId === parseInt(setid) &&
+            {sameId === parseInt(setid) && <>
+                <ProfileImg src={Profile}></ProfileImg>
+                <SecondDiv>
+                    <ThirdDiv>
+                        <NameDiv>
+                            <ATag href="#">sni424</ATag>
+                            <PTag>Feb 23</PTag>
+                        </NameDiv>
+                        <div>
+                            <NewButton><SpanTag href="#" onClick={ShowTwoButton}>...</SpanTag></NewButton>
+                        </div>
+                    </ThirdDiv>
                     <LastDiv>{comment}
                         <div>
                             {showButton === true &&
@@ -136,8 +137,9 @@ function ReplyShow({ setCheckUseEffect, checkUseEffect, setNewReply, newReply, s
                             }
                         </div>
                     </LastDiv>
-                }
-            </SecondDiv>
+                </SecondDiv>
+            </>
+            }
         </FirstDiv>
     );
 };

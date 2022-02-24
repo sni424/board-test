@@ -77,11 +77,9 @@ function Creply({ setid, setNewReply, newReply, setCheckUseEffect, checkUseEffec
     return (
         <FirstDiv>
             <ProfileImg src={Profile}></ProfileImg>
-            <Formdiv onSubmit={CreateReply}>
+            <Formdiv>
                 <TextArea type="text" placeholder="Add to the discussion" value={newConmment} onChange={onChange}></TextArea>
-                <div>
-                    <DivButton ><ButtonA href="#">Submit</ButtonA></DivButton>
-                </div>
+                <DivButton  ><ButtonA href="#" onClick={CreateReply}>Submit</ButtonA></DivButton>
             </Formdiv>
         </FirstDiv>
     );
