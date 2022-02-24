@@ -6,6 +6,7 @@ import Left from './Board-View/Left';
 import Create from './Board-Crud/Create';
 import Update from './Board-Crud/Update';
 import Read from './Board-Crud/Read';
+import lodash from "lodash"
 
 
 function App() {
@@ -26,7 +27,7 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<Left community={community} showCommnutiy={showCommnutiy}></Left>}>
+        <Route path="/" element={<Left community={community} showCommnutiy={showCommnutiy} newDatas={newDatas} fetchData={fetchData}></Left>}>
         </Route>
         <Route path="/write" element={<Create newDatas={newDatas} setNewDatas={setNewDatas} fetchData={fetchData}></Create>}></Route>
         <Route path="/putndelete/:setid" element={<Update newDatas={newDatas} setNewDatas={setNewDatas} fetchData={fetchData}></Update>}></Route>
