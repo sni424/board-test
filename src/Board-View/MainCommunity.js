@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, } from "react-router-dom";
 import "../css/maincommunity.css"
-import useFetch from "../hooks/useFetch";
 import Second_logo from "../img/second-logo.png"
 import PageNum from "./PageNum";
 
@@ -14,10 +13,10 @@ function MainCommunity({ newDatas, fetchData }) {
     const firstPast = lastPost - postPage  // 10-10 =0
     const currentPosts = newDatas.slice(firstPast, lastPost);
 
-    console.log(currentPosts);
+    const [checkTrue, setcheckTrue] = useState(true);
     useEffect(() => {
         fetchData();
-    }, [newDatas.id, newDatas.contents, currentPage])
+    }, [newDatas.id, newDatas.contents, currentPage, checkTrue])
 
 
     return (
@@ -63,7 +62,7 @@ function MainCommunity({ newDatas, fetchData }) {
                 </ul>
             </div>
             <div>
-                <PageNum postPage={postPage} totalPost={newDatas.length} setCurrentPage={setCurrentPage}></PageNum>
+                <PageNum currentPage={currentPage} checkTrue={checkTrue} setcheckTrue={setcheckTrue} postPage={postPage} newDatas={newDatas} setCurrentPage={setCurrentPage}></PageNum>
             </div>
         </div>
     );
