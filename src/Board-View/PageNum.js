@@ -1,42 +1,50 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-function PageNum({ currentPage, postPage, newDatas, setCurrentPage, checkTrue, setcheckTrue }) {
+function PageNum({ currentPage, postPage, newDatas, setCurrentPage }) {
 
     const pageNumbers = [];
-    const setNumber = 11;
-    const [saveNumber, setSaveNumber] = useState(0);
     const [pageI, setPageI] = useState(1);
     for (let i = pageI; i <= Math.ceil(newDatas.length / postPage); i++) {
-        pageNumbers.push(i + saveNumber);
+        pageNumbers.push(i);
     }
 
-    const [currentPaging, setCurrentPaging] = useState(1);//현재 페이지
-    const [postPaging] = useState(10)//포스트 개수
-    const lastPaging = currentPaging * postPaging //1*10 =10
-    const firstPaging = lastPaging - postPaging  // 10-10 =0
-    const newPaging = pageNumbers.slice(firstPaging, lastPaging);
+    const newPaging = pageNumbers.slice(0, 10);
+    const [minusN, setMinusN] = useState(0);
 
     const changePage = pageNumber => {
         return setCurrentPage(pageNumber)
     }
 
     const addPagin = () => {
-        setCurrentPage(setNumber);
-        setSaveNumber(saveNumber + 10);
-        if (currentPage === 11) {
-            setCurrentPage(currentPage + 10);
-            setSaveNumber(saveNumber + 10);
+        if (currentPage < 11) {
+            setPageI(11);
+            setCurrentPage(Math.ceil(currentPage / 10) * 11);
+            setMinusN(minusN + 1)
         }
-        setcheckTrue(!checkTrue)
+        else {
+            setPageI(pageI + 10);
+            setCurrentPage(Math.ceil(currentPage / 10) * 11 - minusN); //11,22,33,44,55,66씩 늘어서 -를 추가
+            setMinusN(minusN + 1)
+        }
+
     }
+
+    function prePage() {
+        setCurrentPage(currentPage - 10);
+        setPageI(pageI - 10);
+    }
+
+    useEffect(() => {
+        console.log(currentPage);
+    }, [pageNumbers, minusN])
 
 
     return (
         <>
             <PageUl>
                 {pageNumbers.includes(1) === false &&
-                    <button>pre</button>
+                    <button onClick={prePage}>pre</button>
                 }
                 {
                     newPaging.map((a, i) => {
@@ -44,7 +52,7 @@ function PageNum({ currentPage, postPage, newDatas, setCurrentPage, checkTrue, s
                             <PageA onClick={() => changePage(parseInt(a))}>{a}</PageA>
                         </PageLi>
                     })}
-                {
+                {newPaging.includes(Math.ceil(newDatas.length / postPage)) === false &&
                     <button onClick={() => addPagin()}>next</button>
                 }
             </PageUl>
