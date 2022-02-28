@@ -1,6 +1,78 @@
+import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+
+function Update({ newDatas, fetchData }) {
+    console.log(newDatas);
+    let navi = useNavigate();
+    let { setid } = useParams();
+
+    const [newTitle, setNewTitle] = useState(newDatas.find((a) => { return a.id === parseInt(setid) }).title);
+    const [newcontent, setNewContent] = useState(newDatas.find((a) => { return a.id === parseInt(setid) }).contents);
+
+    function onChange(e) {
+        const { value } = e.target;
+        setNewTitle(value);
+    }
+
+    function onChange2(e) {
+        const { value } = e.target;
+        setNewContent(value);
+    }
+
+    function addTitle(event) {
+        event.preventDefault();
+        axios({
+            method: "PUT",
+            url: `http://localhost:3001/boards/${setid}`,
+            data: {
+                id: parseInt(setid),
+                title: newTitle,
+                contents: newcontent,
+            },
+        }).then(() => {
+            alert("생성이 완료되었습니다.");
+            navi(`/${setid}`);
+        })
+            .catch(err => {
+                return alert(err.message);
+            })
+    }
+    function returnPage() {
+        navi(-1);
+    }
+
+
+    useEffect(() => {
+        fetchData();
+    }, [])
+
+    return (
+        <BackDiv>
+            <HeaderDiv>
+                <DivButton><ButtonA href="#">Add a cover image</ButtonA></DivButton>
+                <TextAreaFirst
+                    height="auto"
+                    type='text'
+                    placeholder='제목'
+                    value={newTitle}
+                    onChange={onChange} />
+                <hr></hr>
+                <TextAreaFirst
+                    height="80%"
+                    className="text-area"
+                    placeholder='내용'
+                    value={newcontent}
+                    onChange={onChange2} />
+                <ButtonDiv>
+                    <DivButton><ButtonB href="#" onClick={addTitle}>Publish</ButtonB></DivButton>
+                    <DivButton><ButtonB href="#" onClick={returnPage}>Cancel</ButtonB></DivButton>
+                </ButtonDiv>
+            </HeaderDiv>
+        </BackDiv>
+    );
+};
 
 const BackDiv = styled.div`
 background-color:#EFEFEF;
@@ -69,77 +141,5 @@ display:fles;
 align-items: center;
 justify-content: center;
 `;
-
-function Update({ newDatas, setNewDatas, fetchData }) {
-    console.log(newDatas);
-    let navi = useNavigate();
-    let { setid } = useParams();
-
-    const [newTitle, setNewTitle] = useState(newDatas.find((a) => { return a.id === parseInt(setid) }).title);
-    const [newcontent, setNewContent] = useState(newDatas.find((a) => { return a.id === parseInt(setid) }).contents);
-
-    function onChange(e) {
-        const { value } = e.target;
-        setNewTitle(value);
-    }
-
-    function onChange2(e) {
-        const { value } = e.target;
-        setNewContent(value);
-    }
-
-    function addTitle(event) {
-        event.preventDefault();
-        fetch(`http://localhost:3001/boards/${setid}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                id: parseInt(setid),
-                title: newTitle,
-                contents: newcontent,
-            }),
-        }).then(res => {
-            if (res.ok) {
-                alert("생성이 완료되었습니다.");
-                navi(`/${setid}`);
-            }
-        })
-    }
-    function returnPage() {
-        navi(-1);
-    }
-
-
-    useEffect(() => {
-        fetchData();
-    }, [])
-
-    return (
-        <BackDiv>
-            <HeaderDiv>
-                <DivButton><ButtonA href="#">Add a cover image</ButtonA></DivButton>
-                <TextAreaFirst
-                    height="auto"
-                    type='text'
-                    placeholder='제목'
-                    value={newTitle}
-                    onChange={onChange} />
-                <hr></hr>
-                <TextAreaFirst
-                    height="80%"
-                    className="text-area"
-                    placeholder='내용'
-                    value={newcontent}
-                    onChange={onChange2} />
-                <ButtonDiv>
-                    <DivButton><ButtonB href="#" onClick={addTitle}>Publish</ButtonB></DivButton>
-                    <DivButton><ButtonB href="#" onClick={returnPage}>Cancel</ButtonB></DivButton>
-                </ButtonDiv>
-            </HeaderDiv>
-        </BackDiv>
-    );
-};
 
 export default Update;
