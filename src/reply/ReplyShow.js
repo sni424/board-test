@@ -1,10 +1,11 @@
 import axios from "axios";
 import React, { useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Profile from "../img/profile.png"
 
-function ReplyShow({ setCheckUseEffect, checkUseEffect, setNewReply, newReply, setid, sameId, newid, index, comment }) {
-    const [changeReply, setChangeReply] = useState(true);
+function ReplyShow({ setNewReply, newReply, setid, sameId, newid, index, comment }) {
+
     const [inputvalue, setinputvalue] = useState("");
     const [showButton, setShowButton] = useState(false);
 
@@ -25,42 +26,11 @@ function ReplyShow({ setCheckUseEffect, checkUseEffect, setNewReply, newReply, s
             }
         }
     }
-    function valueChange(e) {
-        const replyValue = e.target.value;
-        setinputvalue(replyValue);
-    }
-
-    function changetrue() {
-        setChangeReply(!changeReply);
-    };
-
-    function changeComment() {
-        axios({
-            method: "PUT",
-            url: `http://localhost:3001/boardsreply/${newReply[index].id}`,
-            data: {
-                sameId: parseInt(setid),
-                comment: inputvalue,
-                like: 0,
-            },
-        }).then(() => {
-            setChangeReply(!changeReply);
-            setCheckUseEffect(!checkUseEffect);
-            alert("댓글 수정완료.");
-        }).catch(err => {
-            return alert(err.message);
-        })
-    }
 
     function ShowTwoButton() {
         setShowButton(!showButton);
     }
 
-    const EditReply = changeReply === true
-        ? null
-        : <div>
-            <input value={inputvalue} type="text" placeholder="댓글수정" onChange={valueChange} /><button onClick={changeComment}>수정완료</button>
-        </div>
     return (
         <FirstDiv>
             {sameId === parseInt(setid) && <>
@@ -79,8 +49,10 @@ function ReplyShow({ setCheckUseEffect, checkUseEffect, setNewReply, newReply, s
                         <div>
                             {showButton === true &&
                                 <div>
-                                    <button value={newid} onClick={removeReply}>❌</button><button onClick={changetrue}>수정</button>
-                                    {EditReply}
+                                    <button value={newid} onClick={removeReply}>❌</button>
+                                    <Link to={`/edit/${newid}`}>
+                                        <button>수정</button>
+                                    </Link>
                                 </div>
                             }
                         </div>

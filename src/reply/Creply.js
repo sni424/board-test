@@ -36,11 +36,14 @@ function Creply({ setid, setNewReply, newReply, setCheckUseEffect, checkUseEffec
                 return alert(err.message);
             })
     };
+    const newArray = newReply.filter(a => a.sameId === parseInt(setid));//댓글 갯수
+
     return (
         <div>
             <DiscussionDiv>
-                Comments ({parseInt(setid) === parseInt(newReply.sameId) &&
-                    newReply.length})
+                Comments ({newReply.length > 1
+                    ? newArray.length
+                    : 0})
                 <DivButton  ><ButtonA href="#" onClick={CreateReply}>등록</ButtonA></DivButton>
             </DiscussionDiv>
             <FirstDiv>
