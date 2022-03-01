@@ -6,12 +6,14 @@ import Left from './Board-View/Left';
 import Create from './Board-Crud/Create';
 import Update from './Board-Crud/Update';
 import Read from './Board-Crud/Read';
+import EditReply from './reply/EditReply';
 import axios from 'axios';
 
 
 function App() {
 
   let [community, setCommunity] = useState(true);
+  const [loaDing, setLoaDing] = useState(true);
   const [newDatas, setNewDatas] = useState([]);
   const fetchData = async () => {
     try {
@@ -34,8 +36,9 @@ function App() {
         <Route path="/" element={<Left community={community} showCommnutiy={showCommnutiy} newDatas={newDatas} fetchData={fetchData}></Left>}>
         </Route>
         <Route path="/write" element={<Create newDatas={newDatas} setNewDatas={setNewDatas} fetchData={fetchData}></Create>}></Route>
-        <Route path="/putndelete/:setid" element={<Update newDatas={newDatas} fetchData={fetchData}></Update>}></Route>
+        <Route path="/putndelete/:setid" element={<Update newDatas={newDatas} fetchData={fetchData} loaDing={loaDing} setLoaDing={setLoaDing}></Update>}></Route>
         <Route path='/:setid' element={<Read fetchData={fetchData} newDatas={newDatas}></Read>}></Route>
+        <Route path='/edit/:setid' element={<EditReply></EditReply>}></Route>
       </Routes>
     </div >
   );
