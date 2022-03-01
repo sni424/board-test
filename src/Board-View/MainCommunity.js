@@ -18,7 +18,7 @@ function MainCommunity({ newDatas, fetchData }) {
     const [checkTrue, setcheckTrue] = useState(true);
     useEffect(() => {
         fetchData();
-    }, [newDatas.id, newDatas.contents, currentPage, checkTrue])
+    }, [newDatas, currentPage, checkTrue])
 
 
     return (
