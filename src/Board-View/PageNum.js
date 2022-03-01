@@ -4,56 +4,54 @@ import styled from "styled-components";
 function PageNum({ currentPage, postPage, newDatas, setCurrentPage }) {
 
     const pageNumbers = [];
-    const [pageI, setPageI] = useState(1);
-    for (let i = pageI; i <= Math.ceil(newDatas.length / postPage); i++) {
+    for (let i = 1; i <= Math.ceil(newDatas.length / postPage); i++) {
         pageNumbers.push(i);
     }
 
-    const newPaging = pageNumbers.slice(0, 10);
+    const [startPagin, setStartPagin] = useState(0);
+    const [lastPagin, setLastPagin] = useState(10);
+    const newPaging = pageNumbers.slice(startPagin, lastPagin);
     const [minusN, setMinusN] = useState(0);
 
     const changePage = pageNumber => {
-        return setCurrentPage(pageNumber)
+        setCurrentPage(pageNumber)
     }
 
     const addPagin = () => {
-        if (currentPage < 11) {
-            setPageI(11);
-            setCurrentPage(Math.ceil(currentPage / 10) * 11);
-            setMinusN(minusN + 1)
-        }
-        else {
-            setPageI(pageI + 10);
-            setCurrentPage(Math.ceil(currentPage / 10) * 11 - minusN); //11,22,33,44,55,66씩 늘어서 -를 추가
-            setMinusN(minusN + 1)
-        }
-
+        setCurrentPage(Math.ceil(currentPage / 10) * 11 - minusN); //11,22,33,44,55,66씩 늘어서 -를 추가
+        setMinusN(minusN + 1)
+        setStartPagin(startPagin + 10);
+        setLastPagin(lastPagin + 10);
     }
 
     function prePage() {
         setCurrentPage(currentPage - 10);
-        setPageI(pageI - 10);
+        setMinusN(minusN - 1)
+        setStartPagin(startPagin - 10);
+        setLastPagin(lastPagin - 10);
     }
 
     useEffect(() => {
-        console.log(currentPage);
+
     }, [pageNumbers, minusN])
 
 
     return (
         <>
             <PageUl>
-                {pageNumbers.includes(1) === false &&
-                    <button onClick={prePage}>pre</button>
+                {newPaging.includes(1) === false &&
+                    <PageA onClick={prePage}>◀</PageA>
                 }
                 {
                     newPaging.map((a, i) => {
                         return <PageLi key={i}>
-                            <PageA onClick={() => changePage(parseInt(a))}>{a}</PageA>
+                            <PageA onClick={() => changePage(parseInt(a))}
+                                aria-current={currentPage === i + 1 || currentPage === (i + 1) + 10 ? "page" : null}
+                            >{a}</PageA>
                         </PageLi>
                     })}
                 {newPaging.includes(Math.ceil(newDatas.length / postPage)) === false &&
-                    <button onClick={() => addPagin()}>next</button>
+                    <PageA onClick={() => addPagin()}>▶</PageA>
                 }
             </PageUl>
         </>
@@ -69,7 +67,15 @@ const PageLi = styled.li`
 list-style: none;
 `;
 const PageA = styled.button`
-color: green;
+background-color:transparent;
+border:none;
+&[aria-current] {
+    color: red;
+    font-weight: bold;
+  }
+&:hover{
+    color:blue;
+}
 `;
 
 export default PageNum
