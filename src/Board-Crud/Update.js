@@ -3,13 +3,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
-function Update({ newDatas, fetchData }) {
-    console.log(newDatas);
+function Update({ newDatas, fetchData, setLoaDing, loaDing }) {
     let navi = useNavigate();
     let { setid } = useParams();
+    console.log(newDatas);
 
-    const [newTitle, setNewTitle] = useState(newDatas.find((a) => { return a.id === parseInt(setid) }).title);
-    const [newcontent, setNewContent] = useState(newDatas.find((a) => { return a.id === parseInt(setid) }).contents);
+    const [newTitle, setNewTitle] = useState("");
+    const [newcontent, setNewContent] = useState("");
 
     function onChange(e) {
         const { value } = e.target;
@@ -45,10 +45,17 @@ function Update({ newDatas, fetchData }) {
 
     useEffect(() => {
         fetchData();
-    }, [])
+        if (newDatas.length > 1) {
+            setNewTitle(newDatas.find((a) => { return a.id === parseInt(setid) }).title);
+            setNewContent(newDatas.find((a) => { return a.id === parseInt(setid) }).contents);
+            setLoaDing(true);
+        } else {
+            setLoaDing(false);
+        }
+    }, [loaDing, newDatas.length]);
 
     return (
-        <BackDiv>
+        <BackDiv>{loaDing === true &&
             <HeaderDiv>
                 <DivButton><ButtonA href="#">Add a cover image</ButtonA></DivButton>
                 <TextAreaFirst
@@ -69,6 +76,7 @@ function Update({ newDatas, fetchData }) {
                     <DivButton><ButtonB href="#" onClick={returnPage}>Cancel</ButtonB></DivButton>
                 </ButtonDiv>
             </HeaderDiv>
+        }
         </BackDiv>
     );
 };

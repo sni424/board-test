@@ -10,8 +10,9 @@ function Create({ newDatas, setNewDatas, fetchData }) {
     const writeTitle = useRef("");
     const newcontent = useRef("");
     const newId = useRef("");
-    const [checkid, setCheckId] = useState(1);
+    const [checkid, setCheckId] = useState(newDatas[newDatas.length - 1]);
 
+    console.log(checkid);
     function CreateWrite(event) {
         event.preventDefault();
         if (writeTitle.current.value === "") {
@@ -44,8 +45,13 @@ function Create({ newDatas, setNewDatas, fetchData }) {
     }
 
     useEffect(() => {
-        fetchData();
-    }, [])
+        if (newDatas.length > 1) {
+            setCheckId(newDatas[newDatas.length - 1].id);
+        }
+        else if (newDatas.length < 1) {
+            fetchData();
+        }
+    }, [newDatas])
     return (
         <BackDiv>
             <HeaderDiv>
