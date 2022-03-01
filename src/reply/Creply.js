@@ -1,43 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Profile from "../img/profile.png"
-
-const FirstDiv = styled.div`
-display: flex;
-align-items: center;
-justify-content:start
-`;
-const ProfileImg = styled.img`
-border-radius:70%;
-width: 24px;
-height: 24px;
-margin: -80px 8px 0 0px;
-`;
-const Formdiv = styled.form`
-padding-top:30px
-`;
-const TextArea = styled.textarea`
-width: 500%;
-height: 6.25em;
-resize: none;
-padding:8px;
-`;
-const DivButton = styled.button`
-background-color:transparent;
-border:none;
-`;
-const ButtonA = styled.a`
-background-color:#3b49df;
-color:#f9f9f9;
-display:flex;
-width:83px;
-height:40px;
-border-radius:5px;
-align-items: center;
-justify-content: center;
-font-size:16px;
-margin: 0 0 5px -7px;
-`;
+import axios from "axios";
 
 function Creply({ setid, setNewReply, newReply, setCheckUseEffect, checkUseEffect }) {
 
@@ -53,36 +17,85 @@ function Creply({ setid, setNewReply, newReply, setCheckUseEffect, checkUseEffec
         if (newConmment === "") {
             return alert("댓글의 내용을 적어주세요.")
         }
-        fetch(`http://localhost:3001/boardsreply`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    sameId: parseInt(setid),
-                    comment: newConmment,
-                    like: 0
-                }),
-            }).then(res => {
-                if (res.ok) {
-                    setNewReply([...newReply, res]);
-                    setCheckUseEffect(!checkUseEffect);
-                    setNewConmment("");
-                    console.log()
-                    alert("생성이 완료되었습니다.");
-                }
+        axios({
+            method: "POST",
+            url: `http://localhost:3001/boardsreply`,
+            data: {
+                sameId: parseInt(setid),
+                comment: newConmment,
+                like: 0,
+            }
+        })
+            .then(res => {
+                setNewReply([...newReply, res]);
+                setCheckUseEffect(!checkUseEffect);
+                setNewConmment("");
+                alert("생성이 완료되었습니다.");
+            })
+            .catch(err => {
+                return alert(err.message);
             })
     };
     return (
-        <FirstDiv>
-            <ProfileImg src={Profile}></ProfileImg>
-            <Formdiv>
-                <TextArea type="text" placeholder="Add to the discussion" value={newConmment} onChange={onChange}></TextArea>
-                <DivButton  ><ButtonA href="#" onClick={CreateReply}>Submit</ButtonA></DivButton>
-            </Formdiv>
-        </FirstDiv>
+        <div>
+            <DiscussionDiv>
+                Comments ({parseInt(setid) === parseInt(newReply.sameId) &&
+                    newReply.length})
+                <DivButton  ><ButtonA href="#" onClick={CreateReply}>등록</ButtonA></DivButton>
+            </DiscussionDiv>
+            <FirstDiv>
+                <ProfileImg src={Profile}></ProfileImg>
+                <Formdiv>
+                    <TextArea type="text" placeholder="댓글을 입력해 주세요." value={newConmment} onChange={onChange}></TextArea>
+                </Formdiv>
+            </FirstDiv>
+        </div>
     );
 };
+
+const FirstDiv = styled.div`
+display: flex;
+align-items: center;
+justify-content:start
+`;
+const DiscussionDiv = styled.div`
+display: flex;
+align-items: center;
+justify-content: space-between;
+color:#242424;
+font-size:24px;
+font-weight: 700;
+`;
+const ProfileImg = styled.img`
+border-radius:70%;
+width: 24px;
+height: 24px;
+margin-right:4px;
+`;
+const Formdiv = styled.form`
+padding-top:30px;
+width:100%;
+`;
+const TextArea = styled.textarea`
+width: 100%;
+height: 70px;
+resize: none;
+padding:8px;
+border-radius:5px;
+border:2px solid #EFEFEF;
+outline:none;
+`;
+const DivButton = styled.button`
+background-color:transparent;
+border:none;
+`;
+const ButtonA = styled.a`
+background-color:white;
+color:black;
+border: 1px solid #6550FF;
+border-radius:5px;
+font-size:16px;
+padding:10px 15px;
+`;
 
 export default Creply;

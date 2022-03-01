@@ -1,60 +1,10 @@
+import axios from "axios";
 import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import Profile from "../img/profile.png"
-const FirstDiv = styled.div`
-display: flex;
-align-items: center;
-justify-content: start;
-`;
-const ProfileImg = styled.img`
-border-radius: 70%;
-width: 24px;
-height: 24px;
-margin: -50px 3px 0 0; 
-`;
-const SecondDiv = styled.div`
-border:2px solid #EFEFEF;
-width: 100%;
-height: 100%;
-margin-bottom:5px;
-padding: 10px
-`;
-const ThirdDiv = styled.div`
-display:flex;
-align-items: center;
-justify-content: space-between;
-`;
-const NameDiv = styled.div`
-display:flex;
-align-items: center;
-justify-content: start;
-padding-bottom:10px;
-`;
-const ATag = styled.a`
-color:#3d3d3d;
-font-size:18px;
-font-weight:600;
-padding-rigt:5px;
-`;
-const PTag = styled.p`
-font-size:12px;
-margin: 0 0 0 5px;
-`;
-const NewButton = styled.button`
-background-color:transparent;
-border:none;
-text-align: center;
-`;
-const SpanTag = styled.a`
-font-size:24px
-`;
-const LastDiv = styled.div`
-display:flex;
-`;
 
 function ReplyShow({ setCheckUseEffect, checkUseEffect, setNewReply, newReply, setid, sameId, newid, index, comment }) {
     const [changeReply, setChangeReply] = useState(true);
-    const putReply = useRef(null);
     const [inputvalue, setinputvalue] = useState("");
     const [showButton, setShowButton] = useState(false);
 
@@ -63,15 +13,15 @@ function ReplyShow({ setCheckUseEffect, checkUseEffect, setNewReply, newReply, s
         console.log(typeof value);
         if (newReply.length > 0) {
             if (window.confirm("삭제 하시겠습니까?")) {
-                fetch(`http://localhost:3001/boardsreply/${newReply[index].id}`,
-                    {
-                        method: 'DELETE',
-                    }).then(res => {
-                        if (res.ok) {
-                            setShowButton(!showButton);
-                            setNewReply(newReply.filter(a => a.id !== parseInt(value)));
-                        }
-                    })
+                axios({
+                    method: 'DELETE',
+                    url: `http://localhost:3001/boardsreply/${parseInt(newReply[index].id)}`,
+                }).then(() => {
+                    setShowButton(!showButton);
+                    setNewReply(newReply.filter(a => a.id !== parseInt(value)));
+                }).catch(err => {
+                    return alert(err.message);
+                })
             }
         }
     }
@@ -85,22 +35,20 @@ function ReplyShow({ setCheckUseEffect, checkUseEffect, setNewReply, newReply, s
     };
 
     function changeComment() {
-        fetch(`http://localhost:3001/boardsreply/${newReply[index].id}`, {
+        axios({
             method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
+            url: `http://localhost:3001/boardsreply/${newReply[index].id}`,
+            data: {
                 sameId: parseInt(setid),
                 comment: inputvalue,
                 like: 0,
-            }),
-        }).then(res => {
-            if (res.ok) {
-                setChangeReply(!changeReply);
-                setCheckUseEffect(!checkUseEffect);
-                alert("댓글 수정완료.");
-            }
+            },
+        }).then(() => {
+            setChangeReply(!changeReply);
+            setCheckUseEffect(!checkUseEffect);
+            alert("댓글 수정완료.");
+        }).catch(err => {
+            return alert(err.message);
         })
     }
 
@@ -144,10 +92,56 @@ function ReplyShow({ setCheckUseEffect, checkUseEffect, setNewReply, newReply, s
     );
 };
 
-export default ReplyShow;
+const FirstDiv = styled.div`
+display: flex;
+align-items: center;
+justify-content: start;
+`;
+const ProfileImg = styled.img`
+border-radius: 70%;
+width: 24px;
+height: 24px;
+margin: -50px 3px 0 0; 
+`;
+const SecondDiv = styled.div`
+border:2px solid #EFEFEF;
+border-radius:5px;
+width: 100%;
+height: 100%;
+margin-bottom:5px;
+padding: 10px
+`;
+const ThirdDiv = styled.div`
+display:flex;
+align-items: center;
+justify-content: space-between;
+`;
+const NameDiv = styled.div`
+display:flex;
+align-items: center;
+justify-content: start;
+padding-bottom:10px;
+`;
+const ATag = styled.a`
+color:#3d3d3d;
+font-size:18px;
+font-weight:600;
+padding-rigt:5px;
+`;
+const PTag = styled.p`
+font-size:12px;
+margin: 0 0 0 5px;
+`;
+const NewButton = styled.button`
+background-color:transparent;
+border:none;
+text-align: center;
+`;
+const SpanTag = styled.a`
+font-size:24px
+`;
+const LastDiv = styled.div`
+display:flex;
+`;
 
-// changeReply === true
-//     ? null
-//     : <>
-//         <input value={inputvalue} type="text" placeholder="댓글수정" onChange={valueChange} /><button onClick={changeComment}>수정완료</button>
-//     </>
+export default ReplyShow;
