@@ -34,10 +34,9 @@ function Update({ newDatas, fetchData }) {
         }).then(() => {
             alert("생성이 완료되었습니다.");
             navi(`/${setid}`);
+        }).catch(err => {
+            return alert(err.message);
         })
-            .catch(err => {
-                return alert(err.message);
-            })
     }
     function returnPage() {
         navi(-1);

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Creply from "../reply/Creply";
 import ReplyShow from "../reply/ReplyShow";
@@ -29,6 +29,8 @@ function Read({ newDatas, fetchData }) {
                     }).then(() => {
                         alert("삭제되었습니다.");
                         navi('/');
+                    }).catch(err => {
+                        return alert(err.message);
                     })
             }
         }
@@ -47,11 +49,8 @@ function Read({ newDatas, fetchData }) {
             <HeaderDiv>
                 <FirstDiv>
                     <SecondDiv>
-                        <div><ProfileImg src={Profile}></ProfileImg></div>
-                        <IdPost>
-                            <IdA href="#">sni424</IdA>
-                            <PostPtag>Posted on 2월23일</PostPtag>
-                        </IdPost>
+                        {newDatas.length > 0 &&
+                            <HeaderH1>{newDatas.find(a => a.id === parseInt(setid)).title}</HeaderH1>}
                     </SecondDiv>
                     <ThirdDiv>
                         <Link to={put}>
@@ -61,8 +60,13 @@ function Read({ newDatas, fetchData }) {
                         <ThirdDivA href="#" onClick={pre}>Pre</ThirdDivA>
                     </ThirdDiv>
                 </FirstDiv>
-                {newDatas.length > 0 &&
-                    <HeaderH1>{newDatas.find(a => a.id === parseInt(setid)).title}</HeaderH1>}
+                <IDDiv>
+                    <ProfileImg src={Profile}></ProfileImg>
+                    <IdPost>
+                        <IdA href="#">sni424</IdA>
+                        <PostPtag>Posted on 2월23일</PostPtag>
+                    </IdPost>
+                </IDDiv>
                 <LanguageTag>
                     <LanguageA href="#" background_color={"rgba(0, 0, 0, 0.1)"}>
                         <SharpSpan color="orange">#</SharpSpan>Java
@@ -81,10 +85,6 @@ function Read({ newDatas, fetchData }) {
                     </ContentP>
                 </>
                 <Hr></Hr>
-                <DiscussionDiv>
-                    Discussion ({
-                        newReply.length})
-                </DiscussionDiv>
                 <Creply setCheckUseEffect={setCheckUseEffect} checkUseEffect={checkUseEffect} setid={setid} newReply={newReply} setNewReply={setNewReply}></Creply>
                 {newReply.length > 0 &&
                     newReply.map((a, i) => {
@@ -95,7 +95,6 @@ function Read({ newDatas, fetchData }) {
         </BackDiv>
     );
 };
-
 const BackDiv = styled.div`
 background-color:#EFEFEF;
 width:100%;
@@ -109,7 +108,7 @@ padding: 300px;
 `;
 const HeaderDiv = styled.div`
 width:80%;
-height:100%;
+height:95%;
 background:#ffffff;
 position:absolute;
 margin-top:50px;
@@ -123,6 +122,9 @@ justify-content: space-between;
 const SecondDiv = styled.div`
 display: flex;
 `
+const IDDiv = styled.div`
+display:flex;
+`;
 const ProfileImg = styled.img`
 border-radius: 70%;
 width: 40px;
@@ -188,11 +190,6 @@ color:${props => props.color}
 `;
 const ContentP = styled.p`
 font-weight: 500;
-`;
-const DiscussionDiv = styled.div`
-color:#242424;
-font-size:24px;
-font-weight: 700;
 `;
 const Hr = styled.hr`
 width:100%;

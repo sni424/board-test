@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { ref, useEffect, useRef } from "react";
+import React, { ref, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -10,6 +10,7 @@ function Create({ newDatas, setNewDatas, fetchData }) {
     const writeTitle = useRef("");
     const newcontent = useRef("");
     const newId = useRef("");
+    const [checkid, setCheckId] = useState(1);
 
     function CreateWrite(event) {
         event.preventDefault();
@@ -24,9 +25,10 @@ function Create({ newDatas, setNewDatas, fetchData }) {
             method: "POST",
             url: "http://localhost:3001/boards",
             data: {
-                id: parseInt(newId.current.value),
+                postid: parseInt(newId.current.value),
                 title: writeTitle.current.value,
                 contents: newcontent.current.value,
+                id: checkid + 1
             },
         }).then(res => {
             setNewDatas([...newDatas, res])
