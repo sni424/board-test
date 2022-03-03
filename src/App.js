@@ -37,8 +37,9 @@ function App() {
         </Route>
         <Route path="/write" element={<Create newDatas={newDatas} setNewDatas={setNewDatas} fetchData={fetchData}></Create>}></Route>
         <Route path="/putndelete/:setid" element={<Update newDatas={newDatas} fetchData={fetchData} loaDing={loaDing} setLoaDing={setLoaDing}></Update>}></Route>
-        <Route path='/:setid' element={<Read fetchData={fetchData} newDatas={newDatas}></Read>}></Route>
+        <Route path='/Board/:setid' element={<Read fetchData={fetchData} newDatas={newDatas}></Read>}></Route>
         <Route path='/edit/:setid' element={<EditReply></EditReply>}></Route>
+        <Route path='/Board' MainCommunity></Route>
       </Routes>
     </div >
   );

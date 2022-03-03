@@ -1,13 +1,3 @@
-.full{
-    background-color: #f8f8f8;
-    width: 835px;
-    padding-left: 30px;
-}
-.firstdiv{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
 .firstdiv h4{
     font-size: 18px;
     font-weight: 500;
@@ -20,11 +10,6 @@
     color: white;
     outline: 0;
     font-size: 14px;
-}
-.seconddiv{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
 }
 .ul-tag{
     display: flex;
@@ -41,17 +26,6 @@
     text-decoration: none;
     color: #bbb;
     font-weight: bold
-}
-.input-group-btn{
-    font-size: 0;
-    white-space: nowrap;
-}
-.input-group-btn button{
-    color: #333;
-    background-color: #fff;
-    border-color: #ccc;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
 }
 .thirddiv{
     display: flex;
@@ -123,11 +97,6 @@
     margin-left: 30px;
     margin-bottom: -15px;
 }
-.lastdiv{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 .last-ul{
     list-style: none;
     margin-left: -40px;
@@ -169,4 +138,12 @@ a{
 }
 .read-span a{
     color: #2a6496;
+}
+.pagination{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.pagination li{
+    list-style: none;    
 }
