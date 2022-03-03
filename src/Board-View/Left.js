@@ -5,7 +5,7 @@ import "../css/Left.css"
 import Community from "./Community";
 import MainCommunity from "./MainCommunity";
 
-function Left({ showCommnutiy, community }) {
+function Left({ showCommnutiy, community, newDatas, fetchData }) {
 
     return (
         <div className="flex">
@@ -40,7 +40,7 @@ function Left({ showCommnutiy, community }) {
                 : null
             }
             <div>
-                <MainCommunity></MainCommunity>
+                <MainCommunity newDatas={newDatas} fetchData={fetchData}></MainCommunity>
             </div>
         </div>
     );

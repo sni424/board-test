@@ -1,6 +1,77 @@
-import React, { ref, useEffect, useRef } from "react";
+import axios from "axios";
+import React, { ref, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+
+
+function Create({ newDatas, setNewDatas, fetchData }) {
+
+    const navi = useNavigate();
+    const writeTitle = useRef("");
+    const newcontent = useRef("");
+    const newId = useRef("");
+    const [checkid, setCheckId] = useState(newDatas[newDatas.length - 1]);
+
+    console.log(checkid);
+    function CreateWrite(event) {
+        event.preventDefault();
+        if (writeTitle.current.value === "") {
+            return alert("제목을 입력하세요.");
+        } else if (newcontent.current.value === "") {
+            return alert("내용을 입력하세요.");
+        } else if (newId.current.value === "") {
+            return alert("비밀번호를 입력하세요.");
+        }
+        axios({
+            method: "POST",
+            url: "http://localhost:3001/boards",
+            data: {
+                postid: parseInt(newId.current.value),
+                title: writeTitle.current.value,
+                contents: newcontent.current.value,
+                id: checkid + 1
+            },
+        }).then(res => {
+            setNewDatas([...newDatas, res])
+            alert("생성이 완료되었습니다.");
+            navi('/');
+        }).catch(err => {
+            return alert(err.message);
+        })
+    };
+
+    function returnPage() {
+        navi(-1);
+    }
+
+    useEffect(() => {
+        if (newDatas.length > 1) {
+            setCheckId(newDatas[newDatas.length - 1].id);
+        }
+        else if (newDatas.length < 1) {
+            fetchData();
+        }
+    }, [newDatas])
+    return (
+        <BackDiv>
+            <HeaderDiv>
+                <DivButton><ButtonA href="#">Add a cover image</ButtonA></DivButton>
+                <TextAreaFirst height="auto" type='text' placeholder='New Post title here'
+                    ref={writeTitle} />
+                <TagDiv>Add up to 4 tags...</TagDiv>
+                <hr />
+                <TextAreaFirst height="80%" placeholder='Write yout post content here...' ref={newcontent}></TextAreaFirst>
+                <PasswordDiv>
+                    <PasswordInput type="password" placeholder="Password Please" ref={newId}></PasswordInput>
+                </PasswordDiv>
+                <ButtonDiv>
+                    <DivButton><ButtonB href="#" onClick={CreateWrite}>Publish</ButtonB></DivButton>
+                    <DivButton><ButtonB href="#" onClick={returnPage}>Cancel</ButtonB></DivButton>
+                </ButtonDiv>
+            </HeaderDiv>
+        </BackDiv>
+    );
+};
 
 const BackDiv = styled.div`
 background-color:#EFEFEF;
@@ -86,70 +157,6 @@ font-size:12px;
 font-weight:400;
 color:grey;
 `;
-
-
-function Create({ newDatas, setNewDatas, fetchData }) {
-
-    const navi = useNavigate();
-    const writeTitle = useRef("");
-    const newcontent = useRef("");
-    const newId = useRef("");
-
-    function CreateWrite(event) {
-        event.preventDefault();
-        if (writeTitle.current.value === "") {
-            return alert("제목을 입력하세요.");
-        } else if (newcontent.current.value === "") {
-            return alert("내용을 입력하세요.");
-        } else if (newId.current.value === "") {
-            return alert("비밀번호를 입력하세요.");
-        }
-        fetch("http://localhost:3001/boards", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                id: parseInt(newId.current.value),
-                title: writeTitle.current.value,
-                contents: newcontent.current.value,
-            }),
-        }).then(res => {
-            if (res.ok) {
-                setNewDatas([...newDatas, res])
-                alert("생성이 완료되었습니다.");
-                navi('/');
-            }
-        })
-    };
-
-    function returnPage() {
-        navi(-1);
-    }
-
-    useEffect(() => {
-        fetchData();
-    }, [])
-    return (
-        <BackDiv>
-            <HeaderDiv>
-                <DivButton><ButtonA href="#">Add a cover image</ButtonA></DivButton>
-                <TextAreaFirst height="auto" type='text' placeholder='New Post title here'
-                    ref={writeTitle} />
-                <TagDiv>Add up to 4 tags...</TagDiv>
-                <hr />
-                <TextAreaFirst height="80%" placeholder='Write yout post content here...' ref={newcontent}></TextAreaFirst>
-                <PasswordDiv>
-                    <PasswordInput type="password" placeholder="Password Please" ref={newId}></PasswordInput>
-                </PasswordDiv>
-                <ButtonDiv>
-                    <DivButton><ButtonB href="#" onClick={CreateWrite}>Publish</ButtonB></DivButton>
-                    <DivButton><ButtonB href="#" onClick={returnPage}>Cancel</ButtonB></DivButton>
-                </ButtonDiv>
-            </HeaderDiv>
-        </BackDiv>
-    );
-};
 
 
 export default Create;

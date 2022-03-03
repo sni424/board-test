@@ -1,11 +1,100 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import useFetch from "../hooks/useFetch";
 import Creply from "../reply/Creply";
 import ReplyShow from "../reply/ReplyShow";
 import styled from "styled-components";
 import Profile from "../img/profile.png"
+import axios from "axios";
 
+function Read({ newDatas, fetchData }) {
+
+    const [newReply, setNewReply] = useState([]);
+    const fetchTasks = async () => {
+        const res = await axios('http://localhost:3001/boardsreply')
+        const newData = await res.data
+        return setNewReply(newData)
+    }
+    let { setid } = useParams();
+    let [put, setPut] = useState(`/putndelete/${setid}`);
+    const navi = useNavigate();
+    const [checkUseEffect, setCheckUseEffect] = useState(true);
+
+    function removeText() {
+        if (newDatas.length > 0) {
+            if (window.confirm("삭제 하시겠습니까?")) {
+                axios(
+                    {
+                        method: 'DELETE',
+                        url: `http://localhost:3001/boards/${parseInt(setid)}`,
+                    }).then(() => {
+                        alert("삭제되었습니다.");
+                        navi('/');
+                    }).catch(err => {
+                        return alert(err.message);
+                    })
+            }
+        }
+    }
+    function pre() {
+        navi(-1);
+    }
+
+    useEffect(() => {
+        fetchTasks(); fetchData();
+    }, [newDatas.title, newDatas.content, checkUseEffect])
+
+
+    return (
+        <BackDiv>
+            <HeaderDiv>
+                <FirstDiv>
+                    <SecondDiv>
+                        {newDatas.length > 0 &&
+                            <HeaderH1>{newDatas.find(a => a.id === parseInt(setid)).title}</HeaderH1>}
+                    </SecondDiv>
+                    <ThirdDiv>
+                        <Link to={put}>
+                            <ThirdDivA href="#">Edit</ThirdDivA>
+                        </Link>
+                        <ThirdDivA href="#" onClick={removeText}>Delete</ThirdDivA>
+                        <ThirdDivA href="#" onClick={pre}>Pre</ThirdDivA>
+                    </ThirdDiv>
+                </FirstDiv>
+                <IDDiv>
+                    <ProfileImg src={Profile}></ProfileImg>
+                    <IdPost>
+                        <IdA href="#">sni424</IdA>
+                        <PostPtag>Posted on 2월23일</PostPtag>
+                    </IdPost>
+                </IDDiv>
+                <LanguageTag>
+                    <LanguageA href="#" background_color={"rgba(0, 0, 0, 0.1)"}>
+                        <SharpSpan color="orange">#</SharpSpan>Java
+                    </LanguageA>
+                    <LanguageA href="#" background_color="green">
+                        <SharpSpan color="green">#</SharpSpan>JavaScript
+                    </LanguageA>
+                    <LanguageA href="#" background_color="blue">
+                        <SharpSpan color="blue">#</SharpSpan>Python
+                    </LanguageA>
+                </LanguageTag>
+                <>
+                    <ContentP>
+                        {newDatas.length > 0 &&
+                            <>{newDatas.find(x => x.id === parseInt(setid)).contents}</>}
+                    </ContentP>
+                </>
+                <Hr></Hr>
+                <Creply setCheckUseEffect={setCheckUseEffect} checkUseEffect={checkUseEffect} setid={setid} newReply={newReply} setNewReply={setNewReply}></Creply>
+                {newReply.length > 0 &&
+                    newReply.map((a, i) => {
+                        return <ReplyShow setNewReply={setNewReply} newReply={newReply} setCheckUseEffect={setCheckUseEffect} checkUseEffect={checkUseEffect} setid={setid} key={i} index={i} sameId={a.sameId} comment={a.comment} newid={a.id} like={a.like}></ReplyShow>
+                    })
+                }
+            </HeaderDiv>
+        </BackDiv>
+    );
+};
 const BackDiv = styled.div`
 background-color:#EFEFEF;
 width:100%;
@@ -18,8 +107,8 @@ padding: 300px;
 
 `;
 const HeaderDiv = styled.div`
-width:80%;
-height:100%;
+width:50%;
+height:95%;
 background:#ffffff;
 position:absolute;
 margin-top:50px;
@@ -33,6 +122,9 @@ justify-content: space-between;
 const SecondDiv = styled.div`
 display: flex;
 `
+const IDDiv = styled.div`
+display:flex;
+`;
 const ProfileImg = styled.img`
 border-radius: 70%;
 width: 40px;
@@ -99,105 +191,9 @@ color:${props => props.color}
 const ContentP = styled.p`
 font-weight: 500;
 `;
-const DiscussionDiv = styled.div`
-color:#242424;
-font-size:24px;
-font-weight: 700;
-`;
 const Hr = styled.hr`
 width:100%;
 `;
-
-function Read({ newDatas, setNewDatas, fetchData }) {
-
-    const [newReply, setNewReply] = useState([]);
-    const fetchTasks = async () => {
-        const res = await fetch('http://localhost:3001/boardsreply')
-        const newData = await res.json()
-        return setNewReply(newData)
-    }
-    let { setid } = useParams();
-    let [put, setPut] = useState(`/putndelete/${setid}`);
-    const navi = useNavigate();
-    const [checkUseEffect, setCheckUseEffect] = useState(true);
-
-    function removeText() {
-        if (newDatas.length > 0) {
-            if (window.confirm("삭제 하시겠습니까?")) {
-                fetch(`http://localhost:3001/boards/${parseInt(setid)}`,
-                    {
-                        method: 'DELETE',
-                    }).then(res => {
-                        if (res.ok) {
-                            alert("삭제되었습니다.");
-                            navi('/');
-                        }
-                    })
-            }
-        }
-    }
-    function pre() {
-        navi(-1);
-    }
-
-    useEffect(() => {
-        fetchTasks(); fetchData();
-    }, [newDatas.title, newDatas.content, checkUseEffect])
-
-
-    return (
-        <BackDiv>
-            <HeaderDiv>
-                <FirstDiv>
-                    <SecondDiv>
-                        <div><ProfileImg src={Profile}></ProfileImg></div>
-                        <IdPost>
-                            <IdA href="#">sni424</IdA>
-                            <PostPtag>Posted on 2월23일</PostPtag>
-                        </IdPost>
-                    </SecondDiv>
-                    <ThirdDiv>
-                        <Link to={put}>
-                            <ThirdDivA href="#">Edit</ThirdDivA>
-                        </Link>
-                        <ThirdDivA href="#" onClick={removeText}>Delete</ThirdDivA>
-                        <ThirdDivA href="#" onClick={pre}>Pre</ThirdDivA>
-                    </ThirdDiv>
-                </FirstDiv>
-                {newDatas.length > 0 &&
-                    <HeaderH1>{newDatas.find(a => a.id === parseInt(setid)).title}</HeaderH1>}
-                <LanguageTag>
-                    <LanguageA href="#" background_color={"rgba(0, 0, 0, 0.1)"}>
-                        <SharpSpan color="orange">#</SharpSpan>Java
-                    </LanguageA>
-                    <LanguageA href="#" background_color="green">
-                        <SharpSpan color="green">#</SharpSpan>JavaScript
-                    </LanguageA>
-                    <LanguageA href="#" background_color="blue">
-                        <SharpSpan color="blue">#</SharpSpan>Python
-                    </LanguageA>
-                </LanguageTag>
-                <>
-                    <ContentP>
-                        {newDatas.length > 0 &&
-                            <>{newDatas.find(x => x.id === parseInt(setid)).contents}</>}
-                    </ContentP>
-                </>
-                <Hr></Hr>
-                <DiscussionDiv>
-                    Discussion ({
-                        newReply.length})
-                </DiscussionDiv>
-                <Creply setCheckUseEffect={setCheckUseEffect} checkUseEffect={checkUseEffect} setid={setid} newReply={newReply} setNewReply={setNewReply}></Creply>
-                {newReply.length > 0 &&
-                    newReply.map((a, i) => {
-                        return <ReplyShow setNewReply={setNewReply} newReply={newReply} setCheckUseEffect={setCheckUseEffect} checkUseEffect={checkUseEffect} setid={setid} key={i} index={i} sameId={a.sameId} comment={a.comment} newid={a.id} like={a.like}></ReplyShow>
-                    })
-                }
-            </HeaderDiv>
-        </BackDiv>
-    );
-};
 
 export default Read;
 
